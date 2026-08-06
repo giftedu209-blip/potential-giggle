@@ -1485,8 +1485,16 @@
     document.querySelectorAll('.place-card[data-url]').forEach(card => {
       card.style.cursor = 'pointer';
       card.addEventListener('click', (e) => {
-        if (e.target.closest('button')) return;
+        // 안전 점수 상세 보기(details), 버튼, 입력 요소 클릭은 카드 이동으로 처리하지 않음
+        if (e.target.closest('button, details, summary, select, input, a')) return;
         window.open(card.dataset.url, '_blank', 'noopener,noreferrer');
+      });
+    });
+
+    // 점수 계산 근거 열기/닫기는 카드 클릭 이벤트로 전파되지 않도록 차단
+    document.querySelectorAll('.score-breakdown').forEach(details => {
+      details.addEventListener('click', (e) => {
+        e.stopPropagation();
       });
     });
 
