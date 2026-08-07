@@ -952,6 +952,558 @@
 }
 </style>
 
+
+<style>
+.indoor-weather-recommend{
+  display:none;
+  margin-top:9px;
+  padding:8px 10px;
+  border-radius:12px;
+  background:#eefaf8;
+  border:1px solid #b9ebe3;
+  color:#116f66;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.45;
+}
+.indoor-weather-recommend.show{display:block;}
+.alternative-section.weather-priority{
+  border:1px solid rgba(24,170,154,.28);
+  box-shadow:0 12px 34px rgba(18,116,103,.10);
+}
+.alternative-section.weather-priority .alternative-label{
+  box-shadow:0 0 0 3px rgba(24,170,154,.10);
+}
+.place-card.indoor-priority{
+  outline:2px solid rgba(24,170,154,.32);
+  box-shadow:0 13px 30px rgba(18,116,103,.12);
+}
+</style>
+
+
+<style>
+/* ===== WaveON clarity pass ===== */
+.place-card{
+  border-color:#dfe9ee;
+  box-shadow:0 8px 24px rgba(20,70,95,.07);
+}
+.place-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(20,70,95,.11);
+}
+.place-body{
+  padding:20px;
+}
+.place-body h4{
+  margin:0 0 6px;
+  font-size:22px;
+  line-height:1.25;
+  letter-spacing:-.02em;
+}
+.place-body > p{
+  margin:0 0 13px;
+  min-height:0;
+  font-size:13px;
+  line-height:1.55;
+  color:#6c7d86;
+}
+.meta{
+  gap:6px;
+  margin-bottom:2px;
+}
+.meta span{
+  background:#f2f7f9;
+  border:1px solid #e4eef2;
+  color:#536872;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+}
+
+/* Make the personal result the visual focal point */
+.personal-score{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid #dcecef;
+  border-radius:16px;
+  background:linear-gradient(180deg,#fbfeff,#f5fafb);
+}
+.personal-score-head{
+  margin-bottom:7px;
+}
+.personal-score-head strong{
+  font-size:12px;
+  color:#5e737d;
+  letter-spacing:.01em;
+}
+.personal-score-value{
+  font-size:25px;
+  line-height:1;
+  letter-spacing:-.03em;
+  color:var(--primary-dark);
+}
+.personal-score-track{
+  height:7px;
+  margin-top:9px;
+  background:#e6eef1;
+}
+.personal-advice{
+  margin-top:8px;
+  min-height:0;
+  font-size:11.5px;
+  color:#657781;
+}
+
+.score-quick-summary{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:10px 0 2px;
+}
+.score-state-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.score-state-pill.safe{background:#e5f7f2;color:#147363;}
+.score-state-pill.caution{background:#fff4da;color:#916416;}
+.score-state-pill.danger{background:#ffe7e7;color:#a43b3b;}
+.score-reasons{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+.score-reason{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #e1eaee;
+  color:#64747d;
+  font-size:10.5px;
+  font-weight:750;
+}
+.score-reason.negative{
+  color:#a44b4b;
+  background:#fff8f8;
+  border-color:#f1dddd;
+}
+.score-reason.positive{
+  color:#287568;
+  background:#f5fcfa;
+  border-color:#dcefe9;
+}
+
+/* Detailed scoring is deliberately quieter */
+.score-breakdown{
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid #e6eef1;
+}
+.score-breakdown summary{
+  color:#66808a;
+  font-size:11px;
+}
+.score-table{
+  padding:9px;
+  border-radius:11px;
+  background:#fff;
+}
+
+/* Safety facilities become secondary information */
+.safety-nearby{
+  margin-top:13px;
+  padding-top:12px;
+  gap:7px;
+}
+.safety-nearby-title{
+  font-size:11.5px;
+  color:#6b7e87;
+}
+.facility-row{
+  grid-template-columns:24px 1fr auto;
+  gap:7px;
+  padding:7px 8px;
+  border:1px solid #edf2f4;
+  background:#fafcfd;
+}
+.facility-icon{font-size:15px;}
+.facility-info strong{font-size:11px;color:#4c6069;}
+.facility-info small{font-size:10px;}
+.facility-btn{
+  padding:6px 8px;
+  font-size:10px;
+  color:#557581;
+}
+
+/* Theme / weather bonuses should read like compact badges, not paragraphs */
+.theme-bonus-note,
+.indoor-weather-recommend{
+  width:max-content;
+  max-width:100%;
+  min-height:0;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:10.5px;
+  line-height:1.25;
+}
+.indoor-weather-recommend.show{
+  display:inline-flex;
+  margin-top:8px;
+}
+
+/* Ranking should be instantly visible */
+.rank-badge{
+  top:10px;
+  left:10px;
+  padding:6px 9px;
+  font-size:11px;
+  box-shadow:0 4px 12px rgba(0,0,0,.14);
+}
+
+@media (max-width:700px){
+  .place-body{padding:17px;}
+  .place-body h4{font-size:20px;}
+  .personal-score-value{font-size:23px;}
+}
+</style>
+
+
+<style>
+/* ===== At-a-glance card mode ===== */
+.place-card .place-body{
+  display:flex;
+  flex-direction:column;
+}
+.place-card .safety-nearby,
+.place-card .score-breakdown{
+  display:none;
+}
+.place-card.details-open .safety-nearby{
+  display:grid;
+}
+.place-card.details-open .score-breakdown{
+  display:block;
+}
+.card-detail-toggle{
+  width:100%;
+  margin-top:13px;
+  border:1px solid #dce8ed;
+  background:#f8fbfc;
+  color:#426674;
+  border-radius:12px;
+  min-height:38px;
+  padding:8px 11px;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.card-detail-toggle:hover{background:#eef7f9;}
+.card-detail-toggle::after{content:'＋';font-size:15px;line-height:1;}
+.place-card.details-open .card-detail-toggle::after{content:'－';}
+.place-card.top-recommendation{
+  border:2px solid rgba(20,143,128,.48);
+  box-shadow:0 16px 38px rgba(16,111,100,.16);
+}
+.place-card.top-recommendation::after{
+  content:attr(data-top-label);
+  position:absolute;
+  z-index:7;
+  top:12px;
+  right:12px;
+  background:#fff;
+  color:#126e63;
+  border:1px solid rgba(20,143,128,.25);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:11px;
+  font-weight:950;
+  box-shadow:0 5px 16px rgba(0,0,0,.12);
+}
+.place-card.top-recommendation .place-visual{
+  height:184px;
+}
+.place-card .personal-advice{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.place-card.details-open .personal-advice{
+  display:block;
+  overflow:visible;
+}
+.card-summary-divider{
+  height:1px;
+  background:#edf2f4;
+  margin:12px 0 0;
+}
+@media (max-width:700px){
+  .place-card.top-recommendation::after{
+    top:10px;
+    right:10px;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Final layout refinement ===== */
+
+/* Indoor alternatives: remove the large enclosing-box feeling */
+.alternative-section,
+.alternative-section.weather-priority{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+}
+.alternative-section .alternative-head{
+  padding:0 !important;
+  margin-bottom:14px !important;
+}
+.alternative-section.weather-priority .alternative-label{
+  box-shadow:none !important;
+}
+
+/* Keep the two indoor cards flowing like the beach cards */
+.alternative-section .alternative-grid{
+  background:transparent !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+/* Do not reserve a tall fixed paragraph area on wide screens.
+   This was creating the large blank gap before the hashtags. */
+.place-card .place-body > p:not(.safety-nearby-title),
+.alternative-section .place-body > p{
+  min-height:0 !important;
+  height:auto !important;
+  margin-bottom:10px !important;
+}
+
+/* Keep hashtags naturally attached to the intro text */
+.place-card .place-body > .meta,
+.alternative-section .place-body > .meta{
+  min-height:0 !important;
+  height:auto !important;
+  margin-top:0 !important;
+  margin-bottom:8px !important;
+}
+
+/* Let cards align from their actual content instead of artificial blank space */
+.place-card .place-body > h4{
+  min-height:0 !important;
+}
+.place-card .personal-score{
+  min-height:0 !important;
+}
+
+/* At wide widths, keep text lines readable without forcing vertical gaps */
+@media (min-width:1100px){
+  .place-card .place-body > p:not(.safety-nearby-title){
+    max-width:100%;
+    line-height:1.5;
+  }
+}
+
+/* Mobile keeps the same compact rhythm */
+@media (max-width:650px){
+  .place-card .place-body > p:not(.safety-nearby-title){
+    margin-bottom:9px !important;
+  }
+  .place-card .place-body > .meta{
+    margin-bottom:7px !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Top safety briefing ===== */
+.safety-briefing{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  gap:16px;
+  margin:16px 0 24px;
+}
+.safety-briefing .briefing-card{
+  position:relative;
+  overflow:hidden;
+  padding:19px 20px;
+  border-radius:18px;
+  box-shadow:0 8px 24px rgba(20,70,95,.07);
+}
+.safety-briefing .marine-briefing{
+  background:linear-gradient(180deg,#fffdf8,#fffaf0);
+  border:1px solid #f2dfae;
+}
+.safety-briefing .guide-briefing{
+  background:linear-gradient(180deg,#fbfeff,#f3fafc);
+  border:1px solid #d8e9ef;
+}
+.safety-briefing .briefing-kicker{
+  margin-bottom:7px;
+  color:#6d7f87;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.09em;
+}
+.safety-briefing h3{
+  margin:0 0 10px;
+  font-size:18px;
+  line-height:1.25;
+}
+.safety-briefing .alert{
+  margin:0;
+  padding:12px 13px;
+  border-radius:12px;
+  font-size:12.5px;
+  line-height:1.55;
+}
+.safety-briefing #alertText[data-risk-level="safe"]{
+  border-left-color:var(--safe);
+  background:#edf9f5;
+}
+.safety-briefing #alertText[data-risk-level="caution"]{
+  border-left-color:var(--warning);
+  background:#fff8e8;
+}
+.safety-briefing #alertText[data-risk-level="danger"]{
+  border-left-color:var(--danger);
+  background:#fff0f0;
+}
+.safety-briefing .checklist{
+  gap:8px;
+  margin-top:3px;
+}
+.safety-briefing .check-item{
+  align-items:center;
+  padding:7px 8px;
+  border-radius:10px;
+  background:rgba(255,255,255,.72);
+  font-size:12px;
+  line-height:1.4;
+}
+.safety-briefing .check-icon{
+  width:21px;
+  height:21px;
+  font-size:11px;
+}
+@media (max-width:820px){
+  .safety-briefing{
+    grid-template-columns:1fr;
+    margin-top:14px;
+  }
+}
+</style>
+
+
+<style>
+#language:invalid{color:var(--muted);}
+#language option{color:var(--text);}
+</style>
+
+
+<style>
+/* ===== Prominent emergency action below Safety Briefing ===== */
+.top-emergency-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:-8px 0 24px;
+  padding:15px 17px;
+  border:1px solid #f0caca;
+  border-radius:16px;
+  background:linear-gradient(90deg,#fff7f7,#fffafa);
+  box-shadow:0 7px 20px rgba(137,39,39,.06);
+}
+.top-emergency-copy{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.top-emergency-icon{
+  display:grid;
+  place-items:center;
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:#ffe8e8;
+  font-size:20px;
+}
+.top-emergency-copy strong{
+  display:block;
+  margin-bottom:3px;
+  color:#9f2929;
+  font-size:14px;
+  font-weight:950;
+}
+.top-emergency-copy span:not(.top-emergency-icon){
+  display:block;
+  color:#6d5b5b;
+  font-size:11.5px;
+  line-height:1.45;
+}
+.top-emergency-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+.top-emergency-actions button{
+  min-height:40px;
+  border-radius:11px;
+  padding:9px 13px;
+  cursor:pointer;
+  font-weight:900;
+}
+.top-emergency-119{
+  border:1px solid #bd3434;
+  background:#c93d3d;
+  color:#fff;
+  font-size:13px;
+  box-shadow:0 5px 13px rgba(174,45,45,.18);
+}
+.top-emergency-119:hover{background:#b83232;}
+.top-emergency-nearby{
+  border:1px solid #e2cccc;
+  background:#fff;
+  color:#785050;
+  font-size:11px;
+}
+@media(max-width:720px){
+  .top-emergency-bar{
+    align-items:stretch;
+    flex-direction:column;
+    margin-top:-6px;
+    gap:12px;
+  }
+  .top-emergency-actions{
+    display:grid;
+    grid-template-columns:1.15fr 1fr;
+  }
+  .top-emergency-actions button{width:100%;}
+}
+</style>
+
 </head>
 <body>
 <div class="container">
@@ -964,6 +1516,7 @@
 </div>
 </div>
 <select aria-label="언어 선택" class="lang-select" id="language">
+<option value="" selected disabled>Language</option>
 <option value="ko">한국어</option>
 <option value="en">English</option>
 <option value="ja">日本語</option>
@@ -1015,6 +1568,54 @@
 </aside>
 </section>
 
+
+
+
+
+
+<section class="date-selector-section" id="dateSelectorSection">
+  <div class="date-selector-title" id="dateSelectorTitle">📅 날짜 선택</div>
+  <div class="date-tabs" id="dateTabs" aria-label="날짜 선택">
+    <button type="button" class="date-tab" data-day-offset="-2"></button>
+    <button type="button" class="date-tab" data-day-offset="-1"></button>
+    <button type="button" class="date-tab active" data-day-offset="0"></button>
+    <button type="button" class="date-tab" data-day-offset="1"></button>
+    <button type="button" class="date-tab" data-day-offset="2"></button>
+  </div>
+</section>
+
+<section class="split safety-briefing" id="safetyBriefing" aria-label="안전 브리핑">
+<div class="panel briefing-card marine-briefing">
+<div class="briefing-kicker" id="marineBriefingKicker">🌊 LIVE SAFETY</div>
+<h3 id="alertTitle">연안류 알림</h3>
+<div class="alert" id="alertText">해운대와 송정은 높은 파도와 연안류 위험이 예상됩니다. 오늘은 입수를 피하고 실내 또는 해안 관람 코스를 이용하세요.</div>
+</div>
+<div class="panel briefing-card guide-briefing">
+<div class="briefing-kicker" id="guideBriefingKicker">🛟 TRAVEL SAFETY</div>
+<h3 id="guideTitle">외국인 관광객 안전 가이드</h3>
+<div class="checklist">
+<div class="check-item"><span class="check-icon">✓</span><span id="guide1">빨간 깃발이 보이면 입수하지 마세요.</span></div>
+<div class="check-item"><span class="check-icon">✓</span><span id="guide2">연안류에 휩쓸리면 해안과 평행하게 수영하세요.</span></div>
+<div class="check-item"><span class="check-icon">✓</span><span id="guide3">안전요원의 방송과 통제선을 따르세요.</span></div>
+</div>
+</div>
+</section>
+
+<section class="top-emergency-bar" id="topEmergencyBar">
+  <div class="top-emergency-copy">
+    <span class="top-emergency-icon" aria-hidden="true">🚨</span>
+    <div>
+      <strong id="emergencyTitle">긴급 상황인가요?</strong>
+      <span id="emergencyDesc">해양 사고·부상 발생 시 119 또는 해양경찰 122에 신고하고 현재 위치와 해수욕장 이름을 알려주세요.</span>
+    </div>
+  </div>
+  <div class="top-emergency-actions">
+    <button class="top-emergency-119" id="call119Btn" type="button" onclick="openEmergencyCallModal()">119 신고</button>
+    <button class="top-emergency-nearby" id="myLocationBtn" type="button" onclick="openNearbyEmergency()">내 주변 응급시설</button>
+  </div>
+</section>
+
+
 <section class="profile-panel" id="profilePanel">
   <div class="profile-head">
     <div><h3 id="profileTitle">AI 개인 맞춤 안전 프로필</h3><p id="profileDesc">나이대, 수영 경험, 동행, 활동 목적, 시간대와 이동 편의를 입력하면 각 장소의 안전 점수를 개인 기준으로 다시 분석합니다.</p></div>
@@ -1038,18 +1639,6 @@
   <div class="personal-analysis" id="personalAnalysis"><strong id="analysisTitle">맞춤 분석이 적용되었습니다.</strong><span id="analysisSummary"></span></div>
 </section>
 
-
-<section class="date-selector-section" id="dateSelectorSection">
-  <div class="date-selector-title" id="dateSelectorTitle">📅 날짜 선택</div>
-  <div class="date-tabs" id="dateTabs" aria-label="날짜 선택">
-    <button type="button" class="date-tab" data-day-offset="-2"></button>
-    <button type="button" class="date-tab" data-day-offset="-1"></button>
-    <button type="button" class="date-tab active" data-day-offset="0"></button>
-    <button type="button" class="date-tab" data-day-offset="1"></button>
-    <button type="button" class="date-tab" data-day-offset="2"></button>
-  </div>
-</section>
-
 <section id="recommendations">
 <div class="section-title">
 <div>
@@ -1061,7 +1650,7 @@
 <button class="filter-btn active" data-filter="all" id="filterAll">전체</button>
 <button class="filter-btn" data-filter="walk" id="filterWalk">산책</button>
 <button class="filter-btn" data-filter="swim" id="filterSwim">해수욕</button>
-<button class="filter-btn" data-filter="indoor" id="filterIndoor">실내</button>
+<button class="filter-btn" data-filter="indoor" id="filterIndoor">실내 관광지</button>
 <button class="filter-btn" data-filter="night" id="filterNight">야경</button>
 </div>
 <p id="themeHint" style="margin:-8px 0 16px;color:var(--muted);font-size:12px;">
@@ -1227,16 +1816,6 @@
 </div></div>
 </article></div>
 
-<div class="emergency-strip">
-<div>
-<strong id="emergencyTitle">긴급 상황인가요?</strong>
-<span id="emergencyDesc">해양 사고는 119 또는 해양경찰 122에 신고하고, 현재 위치와 해수욕장 이름을 알려주세요.</span>
-</div>
-<div class="emergency-actions">
-<button class="emergency-btn call" id="call119Btn" onclick="openEmergencyCallModal()">긴급전화 119</button>
-<button class="emergency-btn map" id="myLocationBtn" onclick="openNearbyEmergency()">내 주변 응급시설</button>
-</div>
-</div>
 </section>
 
 <section class="alternative-section" id="alternativeAttractions">
@@ -1292,20 +1871,7 @@
 
   </div>
 </section>
-<section class="split">
-<div class="panel">
-<h3 id="alertTitle">연안류 알림</h3>
-<div class="alert" id="alertText">해운대와 송정은 높은 파도와 연안류 위험이 예상됩니다. 오늘은 입수를 피하고 실내 또는 해안 관람 코스를 이용하세요.</div>
-</div>
-<div class="panel">
-<h3 id="guideTitle">외국인 관광객 안전 가이드</h3>
-<div class="checklist">
-<div class="check-item"><span class="check-icon">✓</span><span id="guide1">빨간 깃발이 보이면 입수하지 마세요.</span></div>
-<div class="check-item"><span class="check-icon">✓</span><span id="guide2">연안류에 휩쓸리면 해안과 평행하게 수영하세요.</span></div>
-<div class="check-item"><span class="check-icon">✓</span><span id="guide3">안전요원의 방송과 통제선을 따르세요.</span></div>
-</div>
-</div>
-</section>
+
 <p class="footer-note">프로토타입 버전 · 실제 서비스에서는 기상청·해양 안전 데이터 API 연동이 필요합니다.</p>
 </div>
 <div aria-modal="true" class="modal-backdrop" id="safetyModal" role="dialog">
@@ -1479,8 +2045,8 @@
     };
 
     const currentLabels = {
-      ko: { safe: '안전', caution: '주의', danger: '위험' },
-      en: { safe: 'Safe', caution: 'Caution', danger: 'High risk' },
+      ko: { safe: '낮음', caution: '주의', danger: '높음' },
+      en: { safe: 'Low', caution: 'Caution', danger: 'High' },
       ja: { safe: '安全', caution: '注意', danger: '危険' },
       zh: { safe: '安全', caution: '注意', danger: '危险' }
     };
@@ -1639,9 +2205,16 @@
       if(dayData){
         Object.keys(dayData).forEach(key=>{ beachWeatherData[key]=dayData[key]; });
       }
+
       updateBeachWeather();
       updateRipCurrentAlert();
-      if(document.getElementById('personalAnalysis')?.classList.contains('show')) applySafetyProfile();
+      updateIndoorWeatherRecommendations();
+
+      if(document.getElementById('personalAnalysis')?.classList.contains('show')){
+        applySafetyProfile();
+      }else{
+        refreshAtAGlanceCards();
+      }
     }
 
     function refreshRecordsForSelectedHour(){
@@ -1711,19 +2284,19 @@
         clearTimeout(liveRefreshTimer);
         liveRefreshTimer=setTimeout(refreshLiveData,10*60*1000);
       }catch(err){
-        console.warn('Five-day data update failed',err);
+        console.error('WaveON live refresh failed:',err);
         updateLiveUi('error');
       }finally{
         if(btn) btn.disabled=false;
       }
     }
 
-    document.getElementById('refreshLiveBtn').addEventListener('click',refreshLiveData);
+    document.getElementById('refreshLiveBtn')?.addEventListener('click',refreshLiveData);
 
 
     const ripAlertText = {
       ko:{
-        safe:'현재 실시간 기상·해양 조건 기준으로 뚜렷한 고위험 해수욕장은 없습니다. 현장 깃발과 안전요원 안내는 계속 확인하세요.',
+        safe:'현재 파고·풍속·해류·강수 조건을 종합한 WaveON 해양 위험 추정에서 뚜렷한 고위험 해수욕장은 없습니다. 현장 깃발과 안전요원 안내는 계속 확인하세요.',
         caution:names=>`${names}은(는) 파고·풍속 또는 연안류 주의 조건이 감지되었습니다. 입수 전 현장 통제와 안전요원 안내를 확인하세요.`,
         danger:names=>`${names}은(는) 높은 파도·강풍 또는 연안류 위험이 감지되었습니다. 오늘은 입수를 피하고 해안 관람이나 실내 대체 코스를 이용하세요.`,
         mixed:(danger,caution)=>`${danger}은(는) 현재 위험도가 높아 입수를 피하세요. ${caution}은(는) 주의 단계로, 현장 통제와 안전요원 안내를 확인하세요.`
@@ -2051,16 +2624,60 @@
     }
 
     function adviceFor(key,score,profile,lang){
-      const ko = ['Aquarium','Museum'].includes(key) ? '실내 시설이라 기상 영향이 적어 현재 프로필에도 적합합니다.' :
-        score>=80 ? (profile.purpose==='swim'?'입수 전 현장 깃발과 안전요원 안내를 확인하세요.':'현재 활동 목적에 비교적 적합합니다.') :
-        score>=55 ? (profile.age==='child'||profile.companion==='childcare'?'보호자 동행과 물가 접근 제한이 필요합니다.':'강풍·파고 변화에 주의하고 짧은 활동을 권장합니다.') :
-        (profile.purpose==='swim'||profile.purpose==='surf'?'현재 프로필에는 입수를 권장하지 않습니다. 다른 코스를 선택하세요.':'해변 가장자리 접근을 피하고 실내 대체 코스를 권장합니다.');
-      const dict={
-        en:{'실내 시설이라 기상 영향이 적어 현재 프로필에도 적합합니다.':'Indoor conditions make this suitable for your profile.','입수 전 현장 깃발과 안전요원 안내를 확인하세요.':'Check flags and lifeguard instructions before entering the water.','현재 활동 목적에 비교적 적합합니다.':'This location is relatively suitable for your activity.','보호자 동행과 물가 접근 제한이 필요합니다.':'Guardian supervision and restricted water access are advised.','강풍·파고 변화에 주의하고 짧은 활동을 권장합니다.':'Watch changing wind and waves; keep the visit short.','현재 프로필에는 입수를 권장하지 않습니다. 다른 코스를 선택하세요.':'Water entry is not advised for your profile. Choose another activity.','해변 가장자리 접근을 피하고 실내 대체 코스를 권장합니다.':'Avoid the waterline and choose an indoor alternative.'},
-        ja:{'실내 시설이라 기상 영향이 적어 현재 프로필에도 적합합니다.':'屋内施設のため天候の影響が少なく、現在のプロフィールに適しています。','입수 전 현장 깃발과 안전요원 안내를 확인하세요.':'入水前に旗と監視員の案内を確認してください。','현재 활동 목적에 비교적 적합합니다.':'現在の活動目的に比較的適しています。','보호자 동행과 물가 접근 제한이 필요합니다.':'保護者の同伴と水辺への接近制限が必要です。','강풍·파고 변화에 주의하고 짧은 활동을 권장합니다.':'風と波の変化に注意し、短時間の活動をおすすめします。','현재 프로필에는 입수를 권장하지 않습니다. 다른 코스를 선택하세요.':'現在のプロフィールでは入水をおすすめしません。別の活動を選んでください。','해변 가장자리 접근을 피하고 실내 대체 코스를 권장합니다.':'水際を避け、屋内の代替コースをおすすめします。'},
-        zh:{'실내 시설이라 기상 영향이 적어 현재 프로필에도 적합합니다.':'室内设施受天气影响较小，适合当前档案。','입수 전 현장 깃발과 안전요원 안내를 확인하세요.':'下水前请确认现场旗帜和救生员指示。','현재 활동 목적에 비교적 적합합니다.':'该地点较适合您当前的活动目的。','보호자 동행과 물가 접근 제한이 필요합니다.':'建议监护人陪同并限制靠近水边。','강풍·파고 변화에 주의하고 짧은 활동을 권장합니다.':'请注意风浪变化，并缩短活动时间。','현재 프로필에는 입수를 권장하지 않습니다. 다른 코스를 선택하세요.':'不建议当前档案下水，请选择其他活动。','해변 가장자리 접근을 피하고 실내 대체 코스를 권장합니다.':'请远离水线，并选择室内替代路线。'}
+      const indoor=['Aquarium','Museum'].includes(key);
+      const marineRisk=indoor?'safe':classifyMarineRisk(key);
+      const waterActivity=['swim','surf'].includes(profile.purpose);
+
+      const messages={
+        ko:{
+          indoor:'실내 시설이라 기상 영향이 적어 현재 프로필에도 적합합니다.',
+          dangerWater:'해양 위험이 높아 현재는 입수를 권장하지 않습니다. 개인 조건과 관계없이 물에 들어가지 마세요.',
+          dangerLand:'해양 위험이 높습니다. 입수는 피하고 해안 관람·산책만 짧게 이용하세요.',
+          cautionWater:'해양 위험이 주의 단계입니다. 입수보다는 비입수 활동을 권장하며 현장 통제를 반드시 확인하세요.',
+          cautionLand:'해양 위험이 주의 단계입니다. 물가 접근을 줄이고 짧은 관광을 권장합니다.',
+          safeLow:'해양 상태는 비교적 양호하지만 현재 개인 조건에서는 입수를 권장하지 않습니다.',
+          safeMid:'해양 상태는 비교적 양호하지만 선택한 개인 조건을 고려해 주의가 필요합니다.',
+          safeHigh:'해양 상태와 현재 개인 조건이 비교적 양호합니다. 현장 안내를 확인한 뒤 이용하세요.'
+        },
+        en:{
+          indoor:'Indoor conditions reduce weather exposure and suit your current profile.',
+          dangerWater:'Marine risk is high. Do not enter the water regardless of personal profile.',
+          dangerLand:'Marine risk is high. Avoid water entry and limit the visit to short coastal sightseeing.',
+          cautionWater:'Marine risk is at caution level. Prefer non-water activities and check on-site controls before entering the water.',
+          cautionLand:'Marine risk is at caution level. Stay back from the waterline and keep the visit short.',
+          safeLow:'Marine conditions are relatively favorable, but your current personal profile does not support water entry.',
+          safeMid:'Marine conditions are relatively favorable, but your selected personal conditions still require caution.',
+          safeHigh:'Marine conditions and your current personal profile are relatively favorable. Check local guidance before use.'
+        },
+        ja:{
+          indoor:'屋内施設のため天候の影響が少なく、現在のプロフィールに適しています。',
+          dangerWater:'海況リスクが高いため、現在は入水をおすすめしません。個人条件に関係なく水に入らないでください。',
+          dangerLand:'海況リスクが高い状態です。入水を避け、海岸観覧や短時間の散歩にとどめてください。',
+          cautionWater:'海況リスクは注意段階です。入水より非入水活動をおすすめし、現地規制を必ず確認してください。',
+          cautionLand:'海況リスクは注意段階です。水際への接近を減らし、短時間の観光をおすすめします。',
+          safeLow:'海況は比較的良好ですが、現在の個人条件では入水をおすすめしません。',
+          safeMid:'海況は比較的良好ですが、選択した個人条件を考慮すると注意が必要です。',
+          safeHigh:'海況と現在の個人条件は比較的良好です。現地案内を確認して利用してください。'
+        },
+        zh:{
+          indoor:'室内设施受天气影响较小，适合当前个人档案。',
+          dangerWater:'海况风险较高，目前不建议下水。无论个人条件如何，请不要进入水中。',
+          dangerLand:'海况风险较高。请避免下水，仅进行短时间海岸观景或散步。',
+          cautionWater:'海况风险处于注意等级。建议选择非下水活动，并在下水前确认现场管制。',
+          cautionLand:'海况风险处于注意等级。请减少靠近水边并缩短活动时间。',
+          safeLow:'海况相对良好，但根据当前个人条件，不建议下水。',
+          safeMid:'海况相对良好，但根据所选个人条件仍需注意。',
+          safeHigh:'海况和当前个人条件相对良好，请确认现场指引后使用。'
+        }
       };
-      return lang==='ko'?ko:(dict[lang][ko]||ko);
+
+      const t=messages[lang]||messages.ko;
+      if(indoor) return t.indoor;
+      if(marineRisk==='danger') return waterActivity?t.dangerWater:t.dangerLand;
+      if(marineRisk==='caution') return waterActivity?t.cautionWater:t.cautionLand;
+      if(score<55) return t.safeLow;
+      if(score<80) return t.safeMid;
+      return t.safeHigh;
     }
 
     function applySafetyProfile(){
@@ -2125,6 +2742,8 @@
       updateDateTabs(lang);
       updateAlternativeSectionLanguage(lang);
       updateAlternativeBadges(lang);
+      updateSafetyBriefingLanguage(lang);
+      updateIndoorWeatherRecommendations();
       updateLiveUi(liveDataApplied?'live':'');
       if (document.getElementById('personalAnalysis').classList.contains('show')) applySafetyProfile();
     });
@@ -2132,10 +2751,10 @@
 
 
     const detailedScoreText = {
-      ko:{details:'점수 계산 근거 보기', environment:'환경 점수', user:'사용자 적합도', rip:'연안류', wave:'파고', wind:'풍속', weather:'날씨', temp:'기온', facility:'안전시설', adjust:'개인 보정', total:'최종 점수', recommendation:'맞춤 추천', rank:'맞춤 추천', demo:'환경 점수 60점과 사용자 적합도 40점을 합산한 규칙 기반 결과입니다. 연안류는 추정치입니다.'},
-      en:{details:'View score breakdown', environment:'Environment score', user:'User suitability', rip:'Rip current', wave:'Wave height', wind:'Wind', weather:'Weather', temp:'Temperature', facility:'Safety access', adjust:'Profile adjustment', total:'Final score', recommendation:'Personal recommendation', rank:'Personal rank', demo:'Rule-based result combining a 60-point environment score and 40-point user suitability score. Rip-current risk is estimated.'},
-      ja:{details:'スコア根拠を見る', environment:'環境スコア', user:'利用者適合度', rip:'離岸流', wave:'波高', wind:'風速', weather:'天気', temp:'気温', facility:'安全施設', adjust:'個人補正', total:'最終スコア', recommendation:'個別おすすめ', rank:'個別順位', demo:'環境60点と利用者適合度40点を合算したルールベース結果で、離岸流は推定値です。'},
-      zh:{details:'查看评分依据', environment:'环境评分', user:'用户适配度', rip:'离岸流', wave:'浪高', wind:'风速', weather:'天气', temp:'气温', facility:'安全设施', adjust:'个人修正', total:'最终评分', recommendation:'个性化推荐', rank:'个性化排名', demo:'基于环境60分与用户适配度40分合计的规则计算，离岸流为估算值。'}
+      ko:{details:'점수 계산 근거 보기', environment:'환경 점수', user:'사용자 적합도', rip:'해양 위험', wave:'파고', wind:'풍속', weather:'날씨', temp:'기온', facility:'안전시설', adjust:'개인 보정', total:'최종 점수', recommendation:'맞춤 추천', rank:'맞춤 추천', demo:'환경 점수 60점과 사용자 적합도 40점을 합산한 규칙 기반 결과입니다. 연안류는 추정치입니다.'},
+      en:{details:'View score breakdown', environment:'Environment score', user:'User suitability', rip:'Marine risk', wave:'Wave height', wind:'Wind', weather:'Weather', temp:'Temperature', facility:'Safety access', adjust:'Profile adjustment', total:'Final score', recommendation:'Personal recommendation', rank:'Personal rank', demo:'Rule-based result combining a 60-point environment score and 40-point user suitability score. Rip-current risk is estimated.'},
+      ja:{details:'スコア根拠を見る', environment:'環境スコア', user:'利用者適合度', rip:'海況リスク', wave:'波高', wind:'風速', weather:'天気', temp:'気温', facility:'安全施設', adjust:'個人補正', total:'最終スコア', recommendation:'個別おすすめ', rank:'個別順位', demo:'環境60点と利用者適合度40点を合算したルールベース結果で、離岸流は推定値です。'},
+      zh:{details:'查看评分依据', environment:'环境评分', user:'用户适配度', rip:'海况风险', wave:'浪高', wind:'风速', weather:'天气', temp:'气温', facility:'安全设施', adjust:'个人修正', total:'最终评分', recommendation:'个性化推荐', rank:'个性化排名', demo:'基于环境60分与用户适配度40分合计的规则计算，离岸流为估算值。'}
     };
 
     // 환경 데이터는 총 60점으로 계산합니다.
@@ -2323,37 +2942,85 @@
     function personalizedScore(key,profile){ return detailedPersonalScore(key,profile).score; }
 
     function conclusionFor(key,score,profile,lang){
-      const ko=['Aquarium','Museum'].includes(key)?'기상 영향이 적은 실내 대체 코스로 우선 추천합니다.':
-        score>=85?(profile.purpose==='swim'?'현장 통제와 안전요원 안내를 확인한 뒤 제한적으로 입수할 수 있습니다.':'현재 프로필에 적합한 활동 장소입니다.'):
-        score>=65?'짧은 체류와 비입수 활동을 권장합니다. 현장 상황이 악화되면 즉시 이동하세요.':
-        score>=45?'물가 접근을 줄이고 보호자 또는 동행자와 함께 관광만 하세요.':'현재 프로필에는 방문 또는 입수를 권장하지 않습니다. 실내 대체 코스를 선택하세요.';
-      const map={en:{'기상 영향이 적은 실내 대체 코스로 우선 추천합니다.':'Recommended first as an indoor alternative with low weather exposure.','현장 통제와 안전요원 안내를 확인한 뒤 제한적으로 입수할 수 있습니다.':'Limited water entry may be possible after checking local controls and lifeguard guidance.','현재 프로필에 적합한 활동 장소입니다.':'This place suits your current profile.','짧은 체류와 비입수 활동을 권장합니다. 현장 상황이 악화되면 즉시 이동하세요.':'Keep the visit short and stay out of the water; leave if conditions worsen.','물가 접근을 줄이고 보호자 또는 동행자와 함께 관광만 하세요.':'Avoid the waterline and stay with a companion for sightseeing only.','현재 프로필에는 방문 또는 입수를 권장하지 않습니다. 실내 대체 코스를 선택하세요.':'Not recommended for your profile. Choose an indoor alternative.'},ja:{},zh:{}};
-      return lang==='ko'?ko:(map[lang]&&map[lang][ko])||ko;
+      const indoor=['Aquarium','Museum'].includes(key);
+      const marineRisk=indoor?'safe':classifyMarineRisk(key);
+      const waterActivity=['swim','surf'].includes(profile.purpose);
+
+      const messages={
+        ko:{
+          indoor:'기상 영향이 적은 실내 대체 코스로 우선 추천합니다.',
+          dangerWater:'해양 위험이 높은 상태이므로 입수 활동은 비추천입니다. 개인 점수는 안전상 상한이 적용되었습니다.',
+          dangerLand:'해양 위험이 높아 입수는 피하고 해안 관람 위주로 이용하세요.',
+          cautionWater:'해양 위험 주의 단계이므로 입수 목적 점수에 안전 상한이 적용되었습니다.',
+          cautionLand:'해양 상태에 주의가 필요합니다. 물가 접근을 줄이고 비입수 활동을 권장합니다.',
+          safeLow:'해양 위험은 낮지만 개인 조건 때문에 점수가 낮습니다. 바다 자체보다 현재 프로필의 영향이 큽니다.',
+          safeMid:'해양 위험은 낮고 개인 조건을 일부 고려해 주의가 필요한 수준입니다.',
+          safeHigh:'해양 위험과 개인 조건 모두 비교적 양호한 상태입니다.'
+        },
+        en:{
+          indoor:'Recommended first as an indoor alternative with low weather exposure.',
+          dangerWater:'Marine risk is high, so water activity is not recommended. A safety score cap has been applied.',
+          dangerLand:'Marine risk is high. Avoid entering the water and limit the visit to coastal sightseeing.',
+          cautionWater:'Marine risk is at caution level, so a safety cap has been applied to water-activity scoring.',
+          cautionLand:'Marine conditions require caution. Reduce waterline exposure and prefer non-water activities.',
+          safeLow:'Marine risk is low, but the score is reduced by your personal profile rather than the sea conditions themselves.',
+          safeMid:'Marine risk is low, with some caution needed due to your personal profile.',
+          safeHigh:'Both marine conditions and your personal profile are relatively favorable.'
+        },
+        ja:{
+          indoor:'天候の影響が少ない屋内代替コースとして優先的におすすめします。',
+          dangerWater:'海況リスクが高いため入水活動は非推奨です。安全上のスコア上限が適用されています。',
+          dangerLand:'海況リスクが高いため、入水を避け海岸観覧中心で利用してください。',
+          cautionWater:'海況リスクが注意段階のため、入水目的のスコアに安全上限が適用されています。',
+          cautionLand:'海況に注意が必要です。水際への接近を減らし、非入水活動をおすすめします。',
+          safeLow:'海況リスクは低いものの、海そのものではなく個人条件によってスコアが下がっています。',
+          safeMid:'海況リスクは低く、個人条件を考慮すると一部注意が必要です。',
+          safeHigh:'海況と個人条件の両方が比較的良好です。'
+        },
+        zh:{
+          indoor:'优先推荐受天气影响较小的室内替代路线。',
+          dangerWater:'海况风险较高，因此不推荐下水活动。系统已应用安全评分上限。',
+          dangerLand:'海况风险较高，请避免下水，以海岸观景为主。',
+          cautionWater:'海况风险处于注意等级，因此下水活动评分已应用安全上限。',
+          cautionLand:'海况需要注意，请减少靠近水边并优先选择非下水活动。',
+          safeLow:'海况风险较低，但评分主要因个人条件而降低，并非海况本身危险。',
+          safeMid:'海况风险较低，但考虑个人条件仍需一定注意。',
+          safeHigh:'海况和个人条件都相对良好。'
+        }
+      };
+
+      const t=messages[lang]||messages.ko;
+      if(indoor) return t.indoor;
+      if(marineRisk==='danger') return waterActivity?t.dangerWater:t.dangerLand;
+      if(marineRisk==='caution') return waterActivity?t.cautionWater:t.cautionLand;
+      if(score<55) return t.safeLow;
+      if(score<80) return t.safeMid;
+      return t.safeHigh;
     }
 
 
     function translateAdjustmentLabel(name,lang){
       const dict={
-        en:{
+        en:{'연안류 주의·해수욕':'Rip-current caution for swimming','연안류 위험·해수욕':'High rip-current risk for swimming','청년·성인':'Young adult','친구 동행':'With friends','가족 동행':'With family','비입수 활동':'Non-water activity','어린이':'Child','청소년':'Teen','고령자':'Senior','수영 숙련':'Advanced swimmer','수영 불가':'Cannot swim','수영 초보':'Beginner swimmer',
           '0–6시 시간대':'00:00–06:00 time slot','7–12시 시간대':'07:00–12:00 time slot',
           '13–18시 시간대':'13:00–18:00 time slot','19–24시 시간대':'19:00–24:00 time slot',
           '새벽 입수 활동':'Pre-dawn water activity','야간 입수 활동':'Night water activity',
           '새벽 취약 이용자':'Pre-dawn vulnerable-user adjustment','야간 취약 이용자':'Night vulnerable-user adjustment','중장년':'Middle-aged adult',
-          '장시간 보행 부담':'Long-walk mobility adjustment','이동 보조 필요':'Mobility-assistance adjustment','모래사장·입수 접근 부담':'Sand/water-access adjustment','실내 이동 편의':'Indoor mobility suitability','실내 이동 보조 적합':'Indoor assisted-mobility suitability'
+          '장시간 보행 부담':'Long-walk mobility adjustment','이동 보조 필요':'Mobility-assistance adjustment','모래사장·입수 접근 부담':'Sand/water-access adjustment','실내 이동 편의':'Indoor mobility suitability','실내 이동 보조 적합':'Indoor assisted-mobility suitability','해양 위험 주의·해수욕':'Marine-risk caution for swimming','해양 위험 높음·해수욕':'High marine risk for swimming'
         },
-        ja:{
+        ja:{'청년·성인':'若年成人','친구 동행':'友人同行','가족 동행':'家族同行','비입수 활동':'非入水活動','어린이':'子ども','청소년':'青少年','고령자':'高齢者','수영 숙련':'水泳上級',
           '0–6시 시간대':'0〜6時の時間帯','7–12시 시간대':'7〜12時の時間帯',
           '13–18시 시간대':'13〜18時の時間帯','19–24시 시간대':'19〜24時の時間帯',
           '새벽 입수 활동':'早朝の入水活動','야간 입수 활동':'夜間の入水活動',
           '새벽 취약 이용자':'早朝の配慮対象者補正','야간 취약 이용자':'夜間の配慮対象者補正','중장년':'中高年',
-          '장시간 보행 부담':'長時間歩行の補正','이동 보조 필요':'移動補助の補正','모래사장·입수 접근 부담':'砂浜・入水アクセスの補正','실내 이동 편의':'屋内移動の適合','실내 이동 보조 적합':'屋内移動補助の適合'
+          '장시간 보행 부담':'長時間歩行の補正','이동 보조 필요':'移動補助の補正','모래사장·입수 접근 부담':'砂浜・入水アクセスの補正','실내 이동 편의':'屋内移動の適合','실내 이동 보조 적합':'屋内移動補助の適合','수영 불가':'水泳不可','수영 초보':'水泳初心者','해양 위험 주의·해수욕':'海況リスク注意・海水浴','해양 위험 높음·해수욕':'海況リスク高・海水浴'
         },
-        zh:{
+        zh:{'청년·성인':'青年／成人','친구 동행':'朋友同行','가족 동행':'家庭同行','비입수 활동':'非下水活动','어린이':'儿童','청소년':'青少年','고령자':'老年人','수영 숙련':'游泳熟练','수영 불가':'不会游泳','수영 초보':'游泳初学者',
           '0–6시 시간대':'0–6时段','7–12시 시간대':'7–12时段',
           '13–18시 시간대':'13–18时段','19–24시 시간대':'19–24时段',
           '새벽 입수 활동':'凌晨下水活动','야간 입수 활동':'夜间下水活动',
           '새벽 취약 이용자':'凌晨脆弱用户修正','야간 취약 이용자':'夜间脆弱用户修正','중장년':'中年',
-          '장시간 보행 부담':'长时间步行修正','이동 보조 필요':'行动辅助修正','모래사장·입수 접근 부담':'沙滩／下水通行修正','실내 이동 편의':'室内行动适配','실내 이동 보조 적합':'室内辅助行动适配'
+          '장시간 보행 부담':'长时间步行修正','이동 보조 필요':'行动辅助修正','모래사장·입수 접근 부담':'沙滩／下水通行修正','실내 이동 편의':'室内行动适配','실내 이동 보조 적합':'室内辅助行动适配','해양 위험 주의·해수욕':'海况风险注意・游泳','해양 위험 높음·해수욕':'海况风险较高・游泳'
         }
       };
       return lang==='ko' ? name : ((dict[lang]||{})[name]||name);
@@ -2395,6 +3062,7 @@
         const value=card.querySelector('.personal-score-value'), fill=card.querySelector('.personal-score-fill'), advice=card.querySelector('.personal-advice');
         value.textContent=score+' / 100'; fill.style.width=score+'%'; fill.style.background=score>=80?'var(--safe)':score>=55?'var(--warning)':'var(--danger)';
         advice.textContent=adviceFor(key,score,profile,currentLanguage); advice.dataset.generated='1';
+        updateCardQuickSummary(card,key,result);
         let themeNote=card.querySelector('.theme-bonus-note');
         if(result.themeBonus>0 && activeRecommendTheme!=='all'){
           if(!themeNote){themeNote=document.createElement('span');themeNote.className='theme-bonus-note';card.querySelector('.meta').insertAdjacentElement('afterend',themeNote);}
@@ -2409,6 +3077,8 @@
       document.getElementById('analysisSummary').textContent=t.summary+' '+detailedScoreText[currentLanguage].demo;
       document.getElementById('profileStatus').textContent=t.statusApplied;
       localStorage.setItem('waveonSafetyProfile',JSON.stringify(profile));
+      updateIndoorWeatherRecommendations();
+      refreshAtAGlanceCards();
     }
 
 
@@ -2529,6 +3199,16 @@ const alternativeSectionI18n = {
 
         // 선택한 테마를 현재 프로필 점수와 추천 순위에 즉시 반영
         applySafetyProfile();
+
+        // '실내 관광지' 선택 시 페이지 하단의 실내 대체 관광지 섹션으로 바로 이동
+        if (filter === 'indoor') {
+          requestAnimationFrame(() => {
+            document.getElementById('alternativeAttractions')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          });
+        }
       });
     });
 
@@ -2651,6 +3331,289 @@ const alternativeSectionI18n = {
 
 
 
+
+    const indoorWeatherRecommendText = {
+      ko:{
+        mild:b=>`기상 변화로 실내 코스 추천 보너스 +${b}`,
+        caution:b=>`기상 악화로 실내 코스를 추천해요 · 추천 보너스 +${b}`,
+        danger:b=>`해변 활동 위험이 높아 실내 코스를 우선 추천해요 · 추천 보너스 +${b}`
+      },
+      en:{
+        mild:b=>`Indoor recommendation bonus +${b} due to changing weather`,
+        caution:b=>`Indoor course recommended due to poor weather · recommendation bonus +${b}`,
+        danger:b=>`Indoor course strongly recommended due to elevated beach risk · recommendation bonus +${b}`
+      },
+      ja:{
+        mild:b=>`天候変化により屋内コースおすすめ加点 +${b}`,
+        caution:b=>`悪天候のため屋内コースをおすすめします · おすすめ加点 +${b}`,
+        danger:b=>`海辺の危険度が高いため屋内コースを優先おすすめ · おすすめ加点 +${b}`
+      },
+      zh:{
+        mild:b=>`因天气变化，室内路线推荐加分 +${b}`,
+        caution:b=>`因天气恶化，推荐室内路线 · 推荐加分 +${b}`,
+        danger:b=>`海滩活动风险较高，优先推荐室内路线 · 推荐加分 +${b}`
+      }
+    };
+
+    function currentBeachWeatherSummary(){
+      const keys=['Gwangalli','Haeundae','Songjeong','Songdo','Dadaepo','Ilgwang','Imrang'];
+      const rows=keys.map(k=>beachWeatherData[k]).filter(Boolean);
+      if(!rows.length) return {level:'safe',bonus:0};
+
+      const dangerCount=rows.filter(d=>d.current==='danger').length;
+      const cautionCount=rows.filter(d=>d.current==='caution').length;
+      const rainCount=rows.filter(d=>/비|rain|雨|阵雨|雷雨/i.test((d.weather&&d.weather.ko)||'')).length;
+      const maxWave=Math.max(...rows.map(d=>Number(d.wave)||0));
+      const maxWind=Math.max(...rows.map(d=>Number(d.wind)||0));
+
+      if(dangerCount>=2 || maxWave>=2.0 || maxWind>=10 || rainCount>=4){
+        return {level:'danger',bonus:12,dangerCount,cautionCount,rainCount,maxWave,maxWind};
+      }
+      if(dangerCount>=1 || cautionCount>=3 || maxWave>=1.4 || maxWind>=8 || rainCount>=2){
+        return {level:'caution',bonus:8,dangerCount,cautionCount,rainCount,maxWave,maxWind};
+      }
+      if(cautionCount>=1 || maxWave>=1.0 || maxWind>=7 || rainCount>=1){
+        return {level:'mild',bonus:4,dangerCount,cautionCount,rainCount,maxWave,maxWind};
+      }
+      return {level:'safe',bonus:0,dangerCount,cautionCount,rainCount,maxWave,maxWind};
+    }
+
+    function updateIndoorWeatherRecommendations(){
+      const state=currentBeachWeatherSummary();
+      const t=indoorWeatherRecommendText[currentLanguage] || indoorWeatherRecommendText.ko;
+      const section=document.getElementById('alternativeAttractions');
+
+      if(section) section.classList.toggle('weather-priority',state.bonus>0);
+
+      ['Aquarium','Museum'].forEach(key=>{
+        const card=document.querySelector(`.place-card[data-place="${key}"]`);
+        if(!card) return;
+
+        let note=card.querySelector('.indoor-weather-recommend');
+        if(!note){
+          note=document.createElement('div');
+          note.className='indoor-weather-recommend';
+          const meta=card.querySelector('.meta');
+          const score=card.querySelector('.personal-score');
+          if(meta) meta.insertAdjacentElement('afterend',note);
+          else if(score) score.insertAdjacentElement('beforebegin',note);
+          else card.appendChild(note);
+        }
+
+        if(state.bonus>0){
+          note.textContent=t[state.level](state.bonus);
+          note.classList.add('show');
+          card.classList.add('indoor-priority');
+          card.dataset.weatherRecommendBonus=String(state.bonus);
+        }else{
+          note.classList.remove('show');
+          card.classList.remove('indoor-priority');
+          card.dataset.weatherRecommendBonus='0';
+        }
+      });
+    }
+
+
+    const quickScoreText = {
+      ko:{
+        safe:'안전',caution:'주의',danger:'비추천',
+        ripSafe:'연안류 낮음',ripCaution:'연안류 주의',ripDanger:'연안류 위험',
+        waveGood:'낮은 파고',waveHigh:'높은 파고',
+        windGood:'약한 바람',windHigh:'강한 바람',
+        rain:'비 예보',clear:'날씨 양호',
+        indoor:'실내 코스',weatherSafe:'기상 영향 적음'
+      },
+      en:{
+        safe:'Safe',caution:'Caution',danger:'Not recommended',
+        ripSafe:'Low rip risk',ripCaution:'Rip-current caution',ripDanger:'High rip risk',
+        waveGood:'Low waves',waveHigh:'High waves',
+        windGood:'Light wind',windHigh:'Strong wind',
+        rain:'Rain expected',clear:'Good weather',
+        indoor:'Indoor course',weatherSafe:'Low weather exposure'
+      },
+      ja:{
+        safe:'安全',caution:'注意',danger:'非推奨',
+        ripSafe:'離岸流リスク低',ripCaution:'離岸流注意',ripDanger:'離岸流危険',
+        waveGood:'波が低い',waveHigh:'波が高い',
+        windGood:'風が弱い',windHigh:'強風',
+        rain:'雨予報',clear:'天候良好',
+        indoor:'屋内コース',weatherSafe:'天候の影響が少ない'
+      },
+      zh:{
+        safe:'安全',caution:'注意',danger:'不推荐',
+        ripSafe:'离岸流风险低',ripCaution:'离岸流注意',ripDanger:'离岸流风险高',
+        waveGood:'浪较低',waveHigh:'浪较高',
+        windGood:'风较弱',windHigh:'强风',
+        rain:'有降雨',clear:'天气良好',
+        indoor:'室内路线',weatherSafe:'受天气影响较小'
+      }
+    };
+
+    function quickReasonsFor(key,result){
+      const t=quickScoreText[currentLanguage] || quickScoreText.ko;
+      if(['Aquarium','Museum'].includes(key)){
+        return [
+          {text:t.indoor,type:'positive'},
+          {text:t.weatherSafe,type:'positive'}
+        ];
+      }
+
+      const d=beachWeatherData[key];
+      const reasons=[];
+
+      const marineRisk=classifyMarineRisk(key);
+      if(marineRisk==='danger') reasons.push({text:t.ripDanger,type:'negative',priority:10});
+      else if(marineRisk==='caution') reasons.push({text:t.ripCaution,type:'negative',priority:8});
+      else reasons.push({text:t.ripSafe,type:'positive',priority:4});
+
+      if(d.wave>1.4) reasons.push({text:t.waveHigh,type:'negative',priority:9});
+      else if(d.wave<=0.8) reasons.push({text:t.waveGood,type:'positive',priority:3});
+
+      if(d.wind>8) reasons.push({text:t.windHigh,type:'negative',priority:9});
+      else if(d.wind<=5) reasons.push({text:t.windGood,type:'positive',priority:2});
+
+      if(/비|rain|雨/i.test((d.weather&&d.weather.ko)||'')){
+        reasons.push({text:t.rain,type:'negative',priority:7});
+      }else{
+        reasons.push({text:t.clear,type:'positive',priority:1});
+      }
+
+      // Personal adjustments can be more important than a minor weather positive.
+      const negatives=(result.adjustments||[]).filter(x=>x[1]<=-6);
+      negatives.slice(0,1).forEach(([name])=>{
+        reasons.push({
+          text:translateAdjustmentLabel(name,currentLanguage),
+          type:'negative',
+          priority:11
+        });
+      });
+
+      return reasons
+        .sort((a,b)=>(b.priority||0)-(a.priority||0))
+        .filter((item,index,arr)=>arr.findIndex(x=>x.text===item.text)===index)
+        .slice(0,2);
+    }
+
+    function updateCardQuickSummary(card,key,result){
+      const t=quickScoreText[currentLanguage] || quickScoreText.ko;
+      const score=result.score;
+      const waterActivityProfile=['swim','surf'].includes(document.getElementById('activityPurpose')?.value);
+      let state=score>=80?'safe':score>=55?'caution':'danger';
+      if(!['Aquarium','Museum'].includes(key)){
+        const marineRisk=result.marineRisk || classifyMarineRisk(key);
+        if(marineRisk==='danger') state=waterActivityProfile?'danger':'caution';
+        else if(marineRisk==='caution' && waterActivityProfile && state==='safe') state='caution';
+      }
+
+      let box=card.querySelector('.score-quick-summary');
+      if(!box){
+        box=document.createElement('div');
+        box.className='score-quick-summary';
+        const track=card.querySelector('.personal-score-track');
+        if(track) track.insertAdjacentElement('afterend',box);
+        else card.querySelector('.personal-score')?.appendChild(box);
+      }
+
+      const reasons=quickReasonsFor(key,result);
+      box.innerHTML=
+        `<span class="score-state-pill ${state}">${t[state]}</span>`+
+        `<span class="score-reasons">${reasons.map(r=>`<span class="score-reason ${r.type}">${r.text}</span>`).join('')}</span>`;
+    }
+
+
+    const cardDetailUiText = {
+      ko:{open:'상세 정보 보기',close:'상세 정보 닫기',top:'✨ 오늘의 추천'},
+      en:{open:'View details',close:'Hide details',top:'✨ Top pick'},
+      ja:{open:'詳細を見る',close:'詳細を閉じる',top:'✨ おすすめ'},
+      zh:{open:'查看详细信息',close:'收起详细信息',top:'✨ 今日推荐'}
+    };
+
+    function ensureCardDetailToggles(){
+      document.querySelectorAll('.place-card').forEach(card=>{
+        if(card.querySelector('.card-detail-toggle')) return;
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='card-detail-toggle';
+        btn.addEventListener('click',e=>{
+          e.preventDefault();
+          e.stopPropagation();
+          card.classList.toggle('details-open');
+          updateCardDetailLanguage(currentLanguage);
+        });
+        const nearby=card.querySelector('.safety-nearby');
+        const breakdown=card.querySelector('.score-breakdown');
+        const target=nearby || breakdown;
+        if(target) target.insertAdjacentElement('beforebegin',btn);
+        else card.querySelector('.place-body')?.appendChild(btn);
+      });
+      updateCardDetailLanguage(currentLanguage);
+    }
+
+    function updateCardDetailLanguage(lang){
+      const t=cardDetailUiText[lang] || cardDetailUiText.ko;
+      document.querySelectorAll('.place-card').forEach(card=>{
+        const btn=card.querySelector('.card-detail-toggle');
+        if(btn){
+          const open=card.classList.contains('details-open');
+          btn.childNodes[0] ? btn.childNodes[0].nodeValue=(open?t.close:t.open) : btn.textContent=(open?t.close:t.open);
+          btn.setAttribute('aria-expanded',open?'true':'false');
+        }
+        if(card.classList.contains('top-recommendation')) card.dataset.topLabel=t.top;
+      });
+    }
+
+    function markTopRecommendation(){
+      const t=cardDetailUiText[currentLanguage] || cardDetailUiText.ko;
+      const cards=[...document.querySelectorAll('.place-card')];
+      cards.forEach(c=>{
+        c.classList.remove('top-recommendation');
+        delete c.dataset.topLabel;
+      });
+
+      // Ranking is already calculated by WaveON; use the current #1 card.
+      let top=cards.find(c=>c.querySelector('.rank-badge')?.textContent?.includes('#1'));
+      if(!top){
+        top=cards
+          .map(c=>({c,v:Number((c.querySelector('.personal-score-value')?.textContent||'').replace(/[^0-9.-]/g,''))}))
+          .filter(x=>Number.isFinite(x.v))
+          .sort((a,b)=>b.v-a.v)[0]?.c;
+      }
+      if(top){
+        top.classList.add('top-recommendation');
+        top.dataset.topLabel=t.top;
+      }
+    }
+
+    function refreshAtAGlanceCards(){
+      ensureCardDetailToggles();
+      markTopRecommendation();
+      updateCardDetailLanguage(currentLanguage);
+    }
+
+
+    const safetyBriefingKickerText = {
+      ko:{marine:'🌊 실시간 안전',guide:'🛟 여행 안전'},
+      en:{marine:'🌊 LIVE SAFETY',guide:'🛟 TRAVEL SAFETY'},
+      ja:{marine:'🌊 リアルタイム安全',guide:'🛟 旅行安全'},
+      zh:{marine:'🌊 实时安全',guide:'🛟 旅行安全'}
+    };
+
+    function updateSafetyBriefingLanguage(lang){
+      const t=safetyBriefingKickerText[lang] || safetyBriefingKickerText.ko;
+      const marine=document.getElementById('marineBriefingKicker');
+      const guide=document.getElementById('guideBriefingKicker');
+      if(marine) marine.textContent=t.marine;
+      if(guide) guide.textContent=t.guide;
+      const section=document.getElementById('safetyBriefing');
+      if(section){
+        section.setAttribute('aria-label',
+          lang==='en'?'Safety briefing':
+          lang==='ja'?'安全ブリーフィング':
+          lang==='zh'?'安全简报':'안전 브리핑'
+        );
+      }
+    }
+
     // 모든 다국어 상수/함수가 선언된 뒤 초기 화면을 설정한다.
     function initializeWaveONUi(){
       updateFacilityLanguage('ko');
@@ -2665,7 +3628,10 @@ const alternativeSectionI18n = {
       updateDateTabs('ko');
       updateAlternativeSectionLanguage('ko');
       updateAlternativeBadges('ko');
+      updateSafetyBriefingLanguage('ko');
       updateLiveUi('');
+      updateIndoorWeatherRecommendations();
+      refreshAtAGlanceCards();
       restoreSafetyProfile();
     }
 
